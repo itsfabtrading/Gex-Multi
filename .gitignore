@@ -1,0 +1,53 @@
+# ---------------------------------------------------------------
+# Local data - not published
+# ---------------------------------------------------------------
+gex_history.db
+gex_history.db-journal
+gex_history.db-wal
+gex_history.db-shm
+*.db
+*.sqlite
+*.sqlite3
+
+# Per-run snapshots produced by gex_multi.py
+summaries/
+gex_multi_*_summary.json
+*_summary.json
+
+# Generated charts and composite boards
+charts/
+table/
+
+# Local datasets and logs
+*.json
+!package.json
+*.csv
+
+# ---------------------------------------------------------------
+# Third-party modules - fetched from upstream, not redistributed
+# ---------------------------------------------------------------
+cboe_data.py
+gamma_exposure.py
+
+# ---------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.venv/
+.ipynb_checkpoints/
+*.egg-info/
+
+# ---------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
