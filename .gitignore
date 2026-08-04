@@ -18,6 +18,10 @@ gex_multi_*_summary.json
 charts/
 table/
 
+# ...but README screenshots are published on purpose
+!assets/
+!assets/**
+
 # Local datasets and logs
 *.json
 !package.json

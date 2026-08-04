@@ -1,8 +1,8 @@
 # gex_multi.py
 
-**Own your levels.** Multi-symbol dealer gamma exposure (GEX) computed from public CBOE option chains — SPX, NDX, SPY, QQQ, SOXX, VIX — with price levels converted into ES and NQ futures terms.
+**Own your levels.** Dealer gamma exposure (GEX) computed from public CBOE option chains for **any listed stock, ETF or index** — add a ticker to one list and it gets the full treatment. Ships configured for SPX, NDX, SPY, QQQ, SOXX and VIX, with price levels additionally converted into ES and NQ futures terms.
 
-One command produces the gamma flip, call and put walls, gross-gamma magnet, 0DTE sub-levels and the options-implied 1-day range for every symbol you track: printed as text tables, saved as JSON, appended to a SQLite history, and rendered as charts.
+One command produces the gamma flip, call and put walls, gross-gamma magnet, 0DTE sub-levels and the options-implied 1-day range for every symbol you track — AAPL, NVDA, TSLA, IWM, GLD, whatever you trade — printed as text tables, saved as JSON, appended to a SQLite history, and rendered as charts.
 
 ---
 
@@ -122,7 +122,7 @@ pip install -r requirements.txt
 - **`cboe_data.py`** — `get_quotes(symbol)` and `get_ticker_info(symbol)`, hitting CBOE's delayed options JSON endpoint.
 - **`gamma_exposure.py`** — `calc_gamma_exposure()` and `calculate_gamma_profile()`.
 
-Both come from **[GMestreM/gex_data](https://github.com/GMestreM/gex_data)**. They are **not redistributed here** — that repository currently ships without a license file, so download them from source yourself:
+Both come from **[GMestreM/gex_data](https://github.com/GMestreM/gex_data)** (MIT licensed). They are **not redistributed here**, so that you always get the current upstream version — grab them directly:
 
 ```bash
 git clone https://github.com/GMestreM/gex_data.git
@@ -167,6 +167,22 @@ Everything lives in one block at the top of the file. These are the research var
 
 **Why near-dated only:** for intraday trading, near-dated gamma drives today's dealer hedging; far-dated LEAPS dilute the read. Every table prints `exps used: N (front DATE)` so you can verify the window and confirm the front expiration is genuinely 0DTE. The 1D band is unaffected by this setting — only the gamma-derived levels change.
 
+### Running any ticker
+
+Nothing in the engine is index-specific. Add a symbol to `SYMBOLS` and it gets a full table, chart, JSON entry and history row like everything else:
+
+```python
+SYMBOLS = ["SPX", "NDX", "SPY", "QQQ", "SOXX", "VIX", "AAPL", "NVDA", "IWM", "GLD"]
+```
+
+Anything with a listed CBOE option chain works — single names, sector and index ETFs, commodity and bond funds. The engine derives everything it needs from the chain itself, so there's no per-symbol setup, and volatility falls back to the symbol's own `iv30` unless you map it in `IV_SOURCE`.
+
+Three things are symbol-specific and worth knowing:
+
+- **Cash indices** (SPX, NDX, RUT) must be registered on `cboe_data.py`'s index list, since CBOE serves them from a different path than equities. Stocks and ETFs need nothing.
+- **The futures conversion is only defined for ES and NQ.** Every other symbol reports in its own native price terms, which is usually what you want anyway.
+- **The 1D band uses the symbol's own 30-day implied vol** unless `IV_SOURCE` maps it elsewhere. That's correct for single names, but it means the band on a low-liquidity ticker inherits whatever noise is in its IV surface.
+
 ---
 
 ## Caveats
@@ -195,7 +211,7 @@ The methodology here is assembled from public work, not invented:
 
 `gex_multi.py` is licensed under the **Apache License 2.0** — see [`LICENSE`](LICENSE). Use it, fork it, change the constants, tell me what you find.
 
-The two dependency modules are **not mine and not included**: `cboe_data.py` and `gamma_exposure.py` are the work of [**GMestreM**](https://github.com/GMestreM/gex_data). Full credit there — no reason to rebuild a working CBOE fetcher from scratch. Fetch them from the upstream repository directly, and respect whatever license it carries at the time you do.
+The two dependency modules are **not mine and not included**: `cboe_data.py` and `gamma_exposure.py` are the work of [**GMestreM**](https://github.com/GMestreM/gex_data), used here under the MIT License. Full credit there — no reason to rebuild a working CBOE fetcher from scratch, and thanks to GMestreM for adding a license so others can build on it.
 
 The chart layout is adapted, with modifications, from the style used by **@ESGexLevels**, whose posts are also what pointed me at CBOE's delayed data as a viable source in the first place. Credit where it's due.
 
