@@ -8,8 +8,6 @@ One command produces the gamma flip, call and put walls, gross-gamma magnet, 0DT
 
 ## Why this exists
 
-![NQ net GEX by strike](assets/gex_NQ_from_QQQ.png)
-
 The obvious answer is cost — I was about to start paying for a levels subscription. That's not the real answer, and working out why is what produced this file instead.
 
 **A vendor level is not a number. It's a function.** Every published gamma level is the output of a pipeline: an expiration window, an implied-volatility surface, a smoothing choice, a rule for which strike gets called "the wall," a decision about whether 0DTE is included and how it's weighted. You don't see any of that. You see the last number the pipeline produced.
@@ -119,16 +117,23 @@ pip install -r requirements.txt
 
 `matplotlib` is optional — without it charts are skipped and everything else still runs. `scipy` is not optional; the gamma engine uses `scipy.stats.norm`.
 
-**Two modules must sit beside `gex_multi.py`:**
+Then just run it — no second clone, no extra setup.
 
-- **`cboe_data.py`** — `get_quotes(symbol)` and `get_ticker_info(symbol)`, hitting CBOE's delayed options JSON endpoint.
-- **`gamma_exposure.py`** — `calc_gamma_exposure()` and `calculate_gamma_profile()`.
+**Two of the files in this repository are not mine.** `cboe_data.py` (the CBOE
+chain fetcher) and `gamma_exposure.py` (the Black-Scholes gamma engine) come
+from **[GMestreM/gex_data](https://github.com/GMestreM/gex_data)** and are
+included here **unmodified**, under the MIT License — see
+[`LICENSE-THIRD-PARTY`](LICENSE-THIRD-PARTY).
 
-Both come from **[GMestreM/gex_data](https://github.com/GMestreM/gex_data)** (MIT licensed). They are **not redistributed here**, so that you always get the current upstream version — grab them directly:
+They're vendored rather than fetched for a reason that's the whole argument of
+this README: a floating dependency on someone else's default branch means the
+flip can change under you without notice. Pinning them keeps a clone
+reproducible. To diff against current upstream at any time:
 
 ```bash
-git clone https://github.com/GMestreM/gex_data.git
-cp gex_data/cboe_data.py gex_data/gamma_exposure.py .
+git clone https://github.com/GMestreM/gex_data.git /tmp/upstream
+diff cboe_data.py /tmp/upstream/cboe_data.py
+diff gamma_exposure.py /tmp/upstream/gamma_exposure.py
 ```
 
 Index symbols (SPX, NDX) must be registered on `cboe_data.py`'s index list to fetch correctly.
@@ -213,7 +218,7 @@ The methodology here is assembled from public work, not invented:
 
 `gex_multi.py` is licensed under the **Apache License 2.0** — see [`LICENSE`](LICENSE). Use it, fork it, change the constants, tell me what you find.
 
-The two dependency modules are **not mine and not included**: `cboe_data.py` and `gamma_exposure.py` are the work of [**GMestreM**](https://github.com/GMestreM/gex_data), used here under the MIT License. Full credit there — no reason to rebuild a working CBOE fetcher from scratch, and thanks to GMestreM for adding a license so others can build on it.
+`cboe_data.py` and `gamma_exposure.py` are **not mine**. They are the work of [**GMestreM**](https://github.com/GMestreM/gex_data), redistributed here unmodified under the MIT License, whose full text and copyright notice are in [`LICENSE-THIRD-PARTY`](LICENSE-THIRD-PARTY). Full credit there — no reason to rebuild a working CBOE fetcher from scratch, and thanks to GMestreM for adding a license so others can build on it.
 
 The chart layout is adapted, with modifications, from the style used by **@ESGexLevels**, whose posts are also what pointed me at CBOE's delayed data as a viable source in the first place. Credit where it's due.
 
