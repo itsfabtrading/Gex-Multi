@@ -8,6 +8,8 @@ One command produces the gamma flip, call and put walls, gross-gamma magnet, 0DT
 
 ## Why this exists
 
+![NQ net GEX by strike](assets/gex_NQ_from_QQQ.png)
+
 The obvious answer is cost — I was about to start paying for a levels subscription. That's not the real answer, and working out why is what produced this file instead.
 
 **A vendor level is not a number. It's a function.** Every published gamma level is the output of a pipeline: an expiration window, an implied-volatility surface, a smoothing choice, a rule for which strike gets called "the wall," a decision about whether 0DTE is included and how it's weighted. You don't see any of that. You see the last number the pipeline produced.
