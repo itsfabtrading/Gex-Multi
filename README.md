@@ -7,6 +7,7 @@ One command produces the gamma flip, call and put walls, gross-gamma magnet, 0DT
 ---
 
 ## Why this exists
+![NQ net GEX by strike](assets/gex_NQ_from_QQQ.png)
 
 The obvious answer is cost — I was about to start paying for a levels subscription. That's not the real answer, and working out why is what produced this file instead.
 
